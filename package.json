@@ -1,0 +1,22 @@
+{
+  "name": "request-batcher",
+  "version": "0.1.0",
+  "description": "Batching requests using promises to await responses",
+  "repository": "github.com/kevrowe/request-batcher",
+  "license": "MIT",
+  "scripts": {
+    "build-cjs": "tsc --outDir dist/cjs/",
+    "build-es": "tsc --outDir dist/es/ --module esnext --declaration --declarationDir dist/types/",
+    "build": "rm -rf dist && npm run build-cjs & npm run build-es",
+    "start": "npm run build-cjs && node dist/cjs/index"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.18.0",
+    "typescript": "^2.9.2"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "source": "src/index.ts",
+  "types": "dist/types/index.d.ts"
+}
