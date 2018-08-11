@@ -1,7 +1,7 @@
 const TIMEOUT_VALUE = 'TIMEOUTRESOLVED'
 const wait = (ms: number): Promise<undefined> => new Promise((resolve, reject) => setTimeout(resolve.bind(this, TIMEOUT_VALUE), ms))
 
-export const throttle = async (input: any[], fn: Function, qty: number, interval: number): Promise<any[]> => {
+export const throttle = async <T, U>(input: U[], fn: (data: U) => Promise<T>, qty: number, interval: number): Promise<T[]> => {
   const remaining = input.slice(0)
   let responses = []
   let i = 0
@@ -9,14 +9,11 @@ export const throttle = async (input: any[], fn: Function, qty: number, interval
   while (remaining.length > 0) {
     let activePromises = []
     const batch = remaining.splice(0, qty)
-    console.log(`================================`)
-    console.log(`Requesting batch ${i++}`)
 
     for (let data of batch) {
       activePromises.push(new Promise(async (resolve, reject) => {
         try {
-          const response = (await fn(data)).data
-          resolve(response)
+          resolve((await fn(data)))
         } catch (e) {
           reject(e)
         }
@@ -24,10 +21,8 @@ export const throttle = async (input: any[], fn: Function, qty: number, interval
     }
 
     activePromises = remaining.length > 0 ? [...activePromises, wait(interval)] : activePromises
-    console.log('Awaiting results')
     responses = responses.concat(await Promise.all(activePromises)).filter(e => e !== TIMEOUT_VALUE)
-    console.log('Merging results')
   }
 
-  return await Promise.resolve(responses)
+  return await responses
 }
