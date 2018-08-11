@@ -24,5 +24,5 @@ export const throttle = async <T, U>(input: U[], fn: (data: U) => Promise<T>, qt
     responses = responses.concat(await Promise.all(activePromises)).filter(e => e !== TIMEOUT_VALUE)
   }
 
-  return await responses
+  return responses
 }
